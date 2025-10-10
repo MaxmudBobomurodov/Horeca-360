@@ -7,5 +7,5 @@ class UnitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Unity
         fields = [
-            'id', 'name_uz', 'name_ru'
+            'id', 'name',
         ]

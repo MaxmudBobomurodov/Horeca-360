@@ -15,8 +15,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     def get_product(self, obj):
         return {
             'id': obj.product.id,
-            'name_uz': obj.product.name_uz,
-            'name_ru': obj.product.name_ru,
+            'name': obj.product.name_uz,
             'price': obj.product.price
         }
 
@@ -28,8 +27,9 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = [
-            'id', 'order_number', 'total_price', 'user', 'payment_type', 'delivery_type',
-            'delivery_price', 'contact_number', 'comment', 'name', 'items', 'created_at'
+            'id', 'order_number', 'total_price', 'user',
+              'comment',
+             'items', 'created_at'
         ]
 
     def get_user(self, obj):

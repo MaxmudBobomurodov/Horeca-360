@@ -19,9 +19,7 @@ class DashboardApiView(views.APIView, ResponseMixin):
         users = User.objects.count()
         orders = Order.objects.count()
         total_price = (
-            Order.objects.\
-            filter(created_at__month=timezone.now().month)\
-            .aggregate(total_price=Sum('total_price'))
+            Order.objects.filter(created_at__month=timezone.now().month).aggregate(total_price=Sum('total_price'))
         )
         categories = Category.objects.count()
         return self.success_response(
@@ -29,7 +27,6 @@ class DashboardApiView(views.APIView, ResponseMixin):
                 'products': products,
                 'users': users,
                 'orders': orders,
-                'total_price': total_price,
                 'categories': categories
             },
             message='dashboard uchun malumotlar statistikasi'

@@ -1,7 +1,5 @@
 import math
-
 from django.db import transaction
-
 from rest_framework import serializers
 
 from core.apps.orders.models import Order, OrderItem
@@ -18,34 +16,30 @@ class OrderItemCreateSerializer(serializers.Serializer):
         product = Product.objects.filter(id=data['product_id']).first()
         if not product:
             raise serializers.ValidationError("Product not found")
+
         data['product'] = product
         product.quantity_left -= round(data['quantity'] / product.min_quantity)
         product.save()
+
         data['price'] = round((data['quantity'] / product.min_quantity) * product.price)
         return data
-    
+
 
 class OrderCreateSerializer(serializers.Serializer):
     items = OrderItemCreateSerializer(many=True)
-    payment_type = serializers.ChoiceField(choices=Order.PAYMENT_TYPE)
-    delivery_type = serializers.ChoiceField(choices=Order.DELIVERY_TYPE)
-    contact_number = serializers.CharField()
     comment = serializers.CharField(required=False)
-    name = serializers.CharField(required=False)
-    
+
     def create(self, validated_data):
         with transaction.atomic():
             order_items = validated_data.pop('items')
             order = Order.objects.create(
                 user=self.context.get('user'),
-                payment_type=validated_data.get('payment_type'),
-                delivery_type=validated_data.get('delivery_type'),
-                contact_number=validated_data.get('contact_number'),
-                comment=validated_data.get('comment'),
-                name=validated_data.get('name')
+                comment=validated_data.get('comment')
             )
+
             items = []
             total_price = 0
+
             for item in order_items:
                 product = item.get("product")
                 items.append(OrderItem(
@@ -55,6 +49,7 @@ class OrderCreateSerializer(serializers.Serializer):
                     order=order,
                 ))
                 total_price += item['price']
+
                 send_orders_to_tg_bot.delay(
                     chat_id=item.get('product').tg_id,
                     product_name=item.get('product').name,
@@ -65,12 +60,13 @@ class OrderCreateSerializer(serializers.Serializer):
             OrderItem.objects.bulk_create(items)
             order.total_price = total_price
             order.save()
+
             send_message_order_user.delay(
                 chat_id=order.user.tg_id,
                 order_id=order.id,
             )
             return order
-        
+
 
 class OrderItemListSerializer(serializers.ModelSerializer):
     product = ProductListSerializer()
@@ -80,14 +76,14 @@ class OrderItemListSerializer(serializers.ModelSerializer):
         fields = [
             'id', 'product', 'price', 'quantity', 'created_at'
         ]
-                
-    
+
+
 class OrderListSerializer(serializers.ModelSerializer):
     items = OrderItemListSerializer(many=True)
 
     class Meta:
         model = Order
         fields = [
-            'id', 'order_number', 'total_price', 'payment_type', 'delivery_type', 'delivery_price',
-            'contact_number', 'comment', 'name', 'items', 'created_at'
+            'id', 'order_number', 'total_price',
+            'comment', 'items', 'created_at'
         ]

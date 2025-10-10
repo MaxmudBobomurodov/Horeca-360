@@ -1,5 +1,6 @@
 from pathlib import Path
 from config.env import env
+from django.utils.translation import gettext_lazy as _
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -8,7 +9,7 @@ SECRET_KEY = env.str('SECRET_KEY')
 
 DEBUG = env.bool('DEBUG')
 
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+ALLOWED_HOSTS = ['*']
 
 
 INSTALLED_APPS = [
@@ -117,10 +118,11 @@ AUTH_USER_MODEL = 'accounts.User'
 from config.conf import *
 
 LANGUAGES = (
-    ('uz', 'Uzbek'),
-    ('ru', 'Russian'),
-)
-MODELTRANSLATION_LANGUAGES = ('uz', 'ru')
+    ('en', _('English')),
+    ('uz', _('Uzbek')),
+    ('ru', _('Russian')),)
+
+MODELTRANSLATION_LANGUAGES = ('en','uz','ru')
 MODELTRANSLATION_DEFAULT_LANGUAGE = 'uz'
 
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', env.str("SWAGGER_PROTOCOL", 'https'))

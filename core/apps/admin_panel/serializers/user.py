@@ -9,7 +9,7 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
         fields = [
-            'id', 'first_name', 'last_name', 'username', 'password', 'last_login', 'date_joined', 'is_superuser',
+            'id', 'username', 'password', 'last_login', 'date_joined', 'is_superuser',
         ]
         extra_kwargs = {'id': {'read_only': True}, 'password': {'write_only': True}}
 
@@ -21,8 +21,6 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         with transaction.atomic():
             user = User.objects.create(
-                first_name=validated_data.get('first_name'),
-                last_name=validated_data.get('last_name'),
                 username=validated_data.get('username'),
                 is_superuser=validated_data.get('is_superuser')
             )
@@ -33,8 +31,6 @@ class UserSerializer(serializers.ModelSerializer):
     def update(self, instance, validated_data):
         with transaction.atomic():
             instance.username = validated_data.get('username', instance.username)
-            instance.first_name = validated_data.get('first_name', instance.first_name)
-            instance.last_name = validated_data.get('last_name', instance.last_name)
             if validated_data.get('password'):
                 instance.set_password(validated_data.get('password'))
             instance.save()
