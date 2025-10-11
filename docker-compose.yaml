@@ -30,6 +30,8 @@ services:
     command: sh ./resources/scripts/entrypoint-server.sh
     environment:
       - PYTHONPYCACHEPREFIX=/var/cache/pycache
+    env_file:
+      - .env
     volumes:
       - './:/code'
     ports:
