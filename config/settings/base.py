@@ -10,9 +10,9 @@ SECRET_KEY = env.str('SECRET_KEY')
 DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
+import os
 
-CSRF_TRUSTED_ORIGINS = ['http://91.218.246.233', 'https://91.218.246.233']
-
+CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
 
 
 INSTALLED_APPS = [
