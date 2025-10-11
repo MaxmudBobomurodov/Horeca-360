@@ -12,8 +12,9 @@ services:
     ports:
       - "8000:80"
     volumes:
-      - ./resources/layout/nginx.conf:/etc/nginx/nginx.conf
-      - ./resources/:/usr/share/nginx/html/resources/
+      - ./resources/static:/code/resources/static
+      - ./resources/media:/code/resources/media
+
     build:
       context: .
       dockerfile: ./docker/Dockerfile.nginx
