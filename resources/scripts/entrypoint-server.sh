@@ -1,10 +1,15 @@
 #!/bin/bash
 set -e  # xato bo‘lsa to‘xtaydi
 
-echo "Waiting for database..."
-until python3 manage.py migrate --check; do
+echo "Waiting for PostgreSQL..."
+
+# Postgres tayyor bo‘lguncha kutish
+until nc -z "$POSTGRES_HOST" "$POSTGRES_PORT"; do
+  echo "Database is unavailable - sleeping"
   sleep 2
 done
+
+echo "Database is up!"
 
 echo "Running migrations..."
 python3 manage.py migrate --noinput
