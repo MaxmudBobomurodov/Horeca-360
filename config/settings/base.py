@@ -11,6 +11,9 @@ DEBUG = env.bool('DEBUG')
 
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 
+CSRF_TRUSTED_ORIGINS = ['http://91.218.246.233', 'https://91.218.246.233']
+
+
 
 INSTALLED_APPS = [
     'modeltranslation',
