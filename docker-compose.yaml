@@ -31,6 +31,8 @@ services:
       - PYTHONPYCACHEPREFIX=/var/cache/pycache
     volumes:
       - './:/code'
+    ports:
+      - '8000:8000'
     depends_on:
       - db
       - redis
