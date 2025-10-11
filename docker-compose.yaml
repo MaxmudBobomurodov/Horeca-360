@@ -10,7 +10,7 @@ services:
     networks:
       - horeca
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - ./resources/static:/code/resources/static
       - ./resources/media:/code/resources/media
