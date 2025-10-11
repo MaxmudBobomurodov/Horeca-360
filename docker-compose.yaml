@@ -14,7 +14,7 @@ services:
     volumes:
       - ./resources/static:/code/resources/static
       - ./resources/media:/code/resources/media
-
+      - ./resources/layout/nginx.conf:/etc/nginx/nginx.conf
     build:
       context: .
       dockerfile: ./docker/Dockerfile.nginx
