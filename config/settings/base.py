@@ -12,7 +12,13 @@ DEBUG = env.bool('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS')
 import os
 
-CSRF_TRUSTED_ORIGINS = os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+CSRF_TRUSTED_ORIGINS = [
+    "http://91.218.246.233",
+    "http://91.218.246.233:8000",
+    "http://91.218.246.233:8001",
+    "https://91.218.246.233",
+]
+
 
 
 INSTALLED_APPS = [
