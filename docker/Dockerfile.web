@@ -16,6 +16,7 @@ RUN apt-get update && \
     libxrender1 \
     libjpeg-dev \
     xfonts-base && \
+    netcat-traditional && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
