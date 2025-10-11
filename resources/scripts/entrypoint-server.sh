@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e  # xatoda to‘xtash
+set -e  # xato bo‘lsa to‘xtaydi
 
 echo "Waiting for database..."
 until python3 manage.py migrate --check; do
@@ -13,4 +13,8 @@ echo "Collecting static files..."
 python3 manage.py collectstatic --noinput
 
 echo "Starting Gunicorn..."
-exec gunicorn config.wsgi:application -b 0.0.0.0:8000 --workers $(($(nproc) * 2 + 1)) --log-level info
+exec gunicorn config.wsgi:application \
+    --bind 0.0.0.0:8000 \
+    --workers $(($(nproc) * 2 + 1)) \
+    --timeout 120 \
+    --log-level info
