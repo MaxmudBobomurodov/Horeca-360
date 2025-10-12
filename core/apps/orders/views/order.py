@@ -30,11 +30,11 @@ class OrderCreateApiView(generics.GenericAPIView):
 
 class OrderListApiView(generics.GenericAPIView):
     serializer_class = serializers.OrderListSerializer
-    queryset = Order.objects.select_related('items', 'items__product')
+    queryset = Order.objects.prefetch_related('items__product')
     permission_classes = [permissions.IsAuthenticated]
 
     def get(self, request):
-        orders = Order.objects.filter(user=request.user)
+        orders = Order.objects.filter(user=request.user).prefetch_related('items__product')
         page = self.paginate_queryset(orders)
         if page is not None:
             serializer = self.serializer_class(page, many=True)
