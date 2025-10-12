@@ -30,6 +30,7 @@ urlpatterns = [
          path('products/', include('core.apps.products.urls')),
          path('shared/', include('core.apps.shared.urls')),
          path('admin/', include('core.apps.admin_panel.urls')),
+         path('objects/', include('core.apps.objects.urls')),
       ]
    )),
 
