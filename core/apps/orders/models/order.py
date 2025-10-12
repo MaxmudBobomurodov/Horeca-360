@@ -31,11 +31,3 @@ class OrderItem(BaseModel):
     class Meta:
         verbose_name = 'Buyurtma elementi'
         verbose_name_plural = 'Buyurtma elementlari'
-
-
-class Object(models.Model):
-    name = models.CharField(max_length=255)
-    address = models.CharField(max_length=255, blank=True, null=True)
-
-    def __str__(self):
-        return self.name

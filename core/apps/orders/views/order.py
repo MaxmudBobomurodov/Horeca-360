@@ -42,13 +42,3 @@ class OrderListApiView(generics.GenericAPIView):
             return self.get_paginated_response(serializer.data)
         serializer = self.serializer_class(orders, many=True)
         return Response(serializer.data, status=200)
-
-class ObjectCreateApiView(generics.CreateAPIView):
-    queryset = Object.objects.all()
-    serializer_class = ObjectSerializer
-    permission_classes = [permissions.IsAdminUser]
-
-class ObjectListApiView(generics.ListAPIView):
-    queryset = Object.objects.all()
-    serializer_class = ObjectSerializer
-    permission_classes = [permissions.IsAuthenticated]

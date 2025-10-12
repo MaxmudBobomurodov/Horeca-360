@@ -15,6 +15,17 @@ class Unity(BaseModel):
         verbose_name_plural = 'Birliklar'
 
 
+class Object(BaseModel):
+    name = models.CharField(max_length=200)
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = 'Koplik'
+        verbose_name_plural = 'Kopliklar'
+
+
 class Product(BaseModel):
     name = models.CharField(max_length=200)
     image = models.ImageField(upload_to='products/product/')

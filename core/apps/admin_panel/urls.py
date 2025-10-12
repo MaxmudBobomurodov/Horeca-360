@@ -7,6 +7,7 @@ from core.apps.admin_panel.views import category as category_views
 from core.apps.admin_panel.views import product as product_views
 from core.apps.admin_panel.views import order as order_views
 from core.apps.admin_panel.views import dashboard as dashboard_views
+from core.apps.admin_panel.views import objects as objects_views
 
 urlpatterns = [
     path('user/', include(
@@ -36,6 +37,15 @@ urlpatterns = [
             path('<uuid:id>/', unity_views.UnityDetailApiView.as_view()),
             path('<uuid:id>/update/', unity_views.UnityUpdateApiView.as_view()),
             path('<uuid:id>/delete/', unity_views.UnityDeleteApiView.as_view()),
+        ]
+    )),
+    path('obyekt/', include(
+        [
+            path('create/', objects_views.ObjectCreateApiView.as_view()),
+            path('list/', objects_views.ObjectListApiView.as_view()),
+            path('<uuid:id>/', objects_views.ObjectDetailApiView.as_view()),
+            path('<uuid:id>/update/', objects_views.ObjectUpdateApiView.as_view()),
+            path('<uuid:id>/delete/', objects_views.ObjectDeleteApiView.as_view()),
         ]
     )),
     path('category/', include(

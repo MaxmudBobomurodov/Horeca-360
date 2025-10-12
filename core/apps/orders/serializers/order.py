@@ -87,8 +87,3 @@ class OrderListSerializer(serializers.ModelSerializer):
             'id', 'order_number', 'total_price',
             'comment', 'items', 'created_at'
         ]
-
-class ObjectSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Object
-        fields = '__all__'
