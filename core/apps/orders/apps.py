@@ -6,5 +6,5 @@ class OrdersConfig(AppConfig):
     name = 'core.apps.orders'
 
     def ready(self):
-        from . import admin 
+        from . import admin
         from . import signals
