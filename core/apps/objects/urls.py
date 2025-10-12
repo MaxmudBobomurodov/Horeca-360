@@ -1,6 +1,8 @@
 from django.urls import path
-from core.apps.admin_panel.views import objects as objects_views
+from core.apps.objects.views import ObjectListApiView
+
+app_name = 'objects'
 
 urlpatterns = [
-path('obyekt/list/', objects_views.ObjectListApiView.as_view()),
+path('obyekt/list/', ObjectListApiView.as_view()),
 ]
