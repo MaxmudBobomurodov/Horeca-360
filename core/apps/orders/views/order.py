@@ -1,8 +1,9 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 
-from core.apps.orders.models import Order, OrderItem
+from core.apps.orders.models import Order, OrderItem, Object
 from core.apps.orders.serializers import order as serializers
+from core.apps.orders.serializers.order import ObjectSerializer
 
 
 class OrderCreateApiView(generics.GenericAPIView):
@@ -41,3 +42,13 @@ class OrderListApiView(generics.GenericAPIView):
             return self.get_paginated_response(serializer.data)
         serializer = self.serializer_class(orders, many=True)
         return Response(serializer.data, status=200)
+
+class ObjectCreateApiView(generics.CreateAPIView):
+    queryset = Object.objects.all()
+    serializer_class = ObjectSerializer
+    permission_classes = [permissions.IsAdminUser]
+
+class ObjectListApiView(generics.ListAPIView):
+    queryset = Object.objects.all()
+    serializer_class = ObjectSerializer
+    permission_classes = [permissions.IsAuthenticated]

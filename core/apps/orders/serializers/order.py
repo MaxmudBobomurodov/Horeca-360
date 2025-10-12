@@ -2,7 +2,7 @@ import math
 from django.db import transaction
 from rest_framework import serializers
 
-from core.apps.orders.models import Order, OrderItem
+from core.apps.orders.models import Order, OrderItem, Object
 from core.apps.products.models import Product
 from core.apps.products.serializers.product import ProductListSerializer
 from core.apps.orders.tasks.order_item import send_orders_to_tg_bot, send_message_order_user
@@ -87,3 +87,8 @@ class OrderListSerializer(serializers.ModelSerializer):
             'id', 'order_number', 'total_price',
             'comment', 'items', 'created_at'
         ]
+
+class ObjectSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Object
+        fields = '__all__'

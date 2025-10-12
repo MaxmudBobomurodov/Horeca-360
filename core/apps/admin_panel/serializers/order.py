@@ -15,7 +15,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
     def get_product(self, obj):
         return {
             'id': obj.product.id,
-            'name': obj.product.name_uz,
+            'name': obj.product.name,
             'price': obj.product.price
         }
 
