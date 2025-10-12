@@ -1,9 +1,8 @@
 from rest_framework import generics, permissions
 from rest_framework.response import Response
 
-from core.apps.orders.models import Order, OrderItem, Object
+from core.apps.orders.models import Order
 from core.apps.orders.serializers import order as serializers
-from core.apps.orders.serializers.order import ObjectSerializer
 
 
 class OrderCreateApiView(generics.GenericAPIView):

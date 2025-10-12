@@ -33,6 +33,7 @@ class Product(BaseModel):
     price = models.PositiveBigIntegerField()
     description = models.TextField(null=True, blank=True)
     unity = models.ForeignKey(Unity, on_delete=models.CASCADE, related_name='products', null=True)
+    object = models.ForeignKey(Object, on_delete=models.CASCADE, related_name='products', null=True)
     tg_id = models.CharField(max_length=50, null=True, blank=True)
     quantity_left = models.PositiveBigIntegerField(default=0)
     min_quantity = models.FloatField(null=True)
