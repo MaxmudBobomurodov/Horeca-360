@@ -77,6 +77,10 @@ class OrderItemListSerializer(serializers.ModelSerializer):
             'id', 'product', 'price', 'quantity', 'created_at'
         ]
 
+    def get_product(self, obj):
+        serializer = ProductListSerializer(obj.product, context=self.context)
+        return serializer.data
+
 
 class OrderListSerializer(serializers.ModelSerializer):
     items = OrderItemListSerializer(many=True)
