@@ -7,9 +7,9 @@ CSRF_TRUSTED_ORIGINS = [
     'http://91.218.246.233:8001',
     'https://safros.uz',
     'https://www.safros.uz',
-    'https://www.safros-admin.uz/',
-    'https://safros-admin.uz/',
-    'https://safros-app.vercel.app/',
+    'https://www.safros-admin.uz',
+    'https://safros-admin.uz',
+    'https://safros-app.vercel.app',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -22,7 +22,7 @@ CORS_ALLOWED_ORIGINS = [
     'http://91.218.246.233:8001',
     'https://safros.uz',
     'https://www.safros.uz',
-    'https://www.safros-admin.uz/',
-    'https://safros-admin.uz/',
-    'https://safros-app.vercel.app/',
+    'https://www.safros-admin.uz',
+    'https://safros-admin.uz',
+    'https://safros-app.vercel.app',
 ]
