@@ -36,13 +36,20 @@ class OrderItemCreateSerializer(serializers.Serializer):
 class OrderCreateSerializer(serializers.Serializer):
     items = OrderItemCreateSerializer(many=True)
     comment = serializers.CharField(required=False)
+    object_id = serializers.UUIDField(required=True)
+    order_type = serializers.CharField(required=False)
 
     def create(self, validated_data):
         with transaction.atomic():
             order_items = validated_data.pop('items')
+            object_id = validated_data.pop('object_id')  # 👈 bu yerda olib olamiz
+            order_type = validated_data.get('order_type', None)
+
             order = Order.objects.create(
                 user=self.context.get('user'),
-                comment=validated_data.get('comment')
+                comment=validated_data.get('comment'),
+                object_id=object_id,  # 👈 shu yerda saqlaymiz
+                order_type=order_type
             )
 
             items = []
