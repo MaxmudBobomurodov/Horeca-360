@@ -4,6 +4,8 @@ networks:
 
 volumes:
   pg_data: null
+  certbot_conf: null      # YANGI
+  certbot_www: null       # YANGI
 
 services:
   nginx:
@@ -11,10 +13,13 @@ services:
       - horeca
     ports:
       - "80:80"
+      - "443:443"       # YANGI - HTTPS port
     volumes:
       - ./resources/static:/code/resources/static
       - ./resources/media:/code/resources/media
       - ./resources/layout/nginx.conf:/etc/nginx/nginx.conf
+      - certbot_conf:/etc/letsencrypt:ro      # YANGI
+      - certbot_www:/var/www/certbot:ro       # YANGI
     build:
       context: .
       dockerfile: ./docker/Dockerfile.nginx
@@ -35,13 +40,12 @@ services:
       - .env
     volumes:
       - './:/code'
-    ports:
-      - "8001:8000"
+    expose:                # ports ni expose ga o'zgartirdik
+      - 8000
     depends_on:
       - db
       - redis
     restart: always
-
 
   db:
     image: postgres:17
@@ -76,4 +80,15 @@ services:
     environment:
       - CELERY_BROKER_URL=redis://redis:6379/0
       - CELERY_RESULT_BACKEND=redis://redis:6379/0
+    restart: always
+
+  # YANGI SERVICE
+  certbot:
+    image: certbot/certbot:latest
+    networks:
+      - horeca
+    volumes:
+      - certbot_conf:/etc/letsencrypt
+      - certbot_www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     restart: always
