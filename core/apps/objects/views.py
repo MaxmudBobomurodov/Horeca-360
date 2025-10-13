@@ -11,7 +11,7 @@ from core.apps.shared.mixins.response import ResponseMixin
 class ObjectListApiView(generics.GenericAPIView, ResponseMixin):
     serializer_class = ObjectSerializer
     queryset = Object.objects.all()
-    permission_classes = [permissions.IsAdminUser]
+    permission_classes = [permissions.AllowAny]
 
     @swagger_auto_schema(
         operation_summary="List all objects",
