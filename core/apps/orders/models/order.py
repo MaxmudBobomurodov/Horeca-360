@@ -15,7 +15,7 @@ class Order(BaseModel):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='orders')
     order_number = models.PositiveBigIntegerField(default=1)
     comment = models.CharField(max_length=500, null=True, blank=True)
-    delivery_type = models.CharField(max_length=20, choices=DELIVERY_CHOICES)
+    delivery_type = models.CharField(max_length=20, choices=DELIVERY_CHOICES, default='to_warehouse')
     accepted_by = models.CharField(max_length=100, null=True, blank=True)  # telegram user id
     accepted_username = models.CharField(max_length=100, null=True, blank=True)
 
