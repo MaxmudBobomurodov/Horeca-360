@@ -2,7 +2,7 @@ from django.db import models
 
 from core.apps.shared.models import BaseModel
 from core.apps.accounts.models import User
-from core.apps.products.models import Product
+from core.apps.products.models import Product, Object
 
 
 class Order(BaseModel):
@@ -32,6 +32,7 @@ class OrderItem(BaseModel):
     quantity = models.FloatField()
     price = models.PositiveBigIntegerField()
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='items', null=True)
+    object = models.ForeignKey(Object, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
         return f'{self.quantity} x {self.product} ({self.price})'

@@ -18,6 +18,14 @@ class OrderItemCreateSerializer(serializers.Serializer):
             raise serializers.ValidationError("Product not found")
 
         data['product'] = product
+
+        if data.get('object_id'):
+            from core.apps.products.models import Object
+            obj = Object.objects.filter(id=data['object_id']).first()
+            if not obj:
+                raise serializers.ValidationError("Object not found")
+            data['object'] = obj
+
         product.quantity_left -= round(data['quantity'] / product.min_quantity)
         product.save()
 
@@ -47,7 +55,7 @@ class OrderCreateSerializer(serializers.Serializer):
                     price=item.get('price'),
                     quantity=item.get('quantity'),
                     order=order,
-                    object=item.get('object')
+                    object=item.get('object'),
                 ))
                 total_price += item['price']
 
@@ -56,7 +64,6 @@ class OrderCreateSerializer(serializers.Serializer):
                     product_name=item.get('product').name,
                     quantity=item.get('quantity'),
                     username=order.user.username,
-                    object=item.get('object')
                 )
 
             OrderItem.objects.bulk_create(items)
