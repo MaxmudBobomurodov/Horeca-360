@@ -3,7 +3,7 @@ from django.db import transaction
 from rest_framework import serializers
 
 from core.apps.orders.models import Order, OrderItem
-from core.apps.products.models import Product
+from core.apps.products.models import Product, Object
 from core.apps.products.serializers.product import ProductListSerializer
 from core.apps.orders.tasks.order_item import send_orders_to_tg_bot, send_message_order_user
 
@@ -11,13 +11,17 @@ from core.apps.orders.tasks.order_item import send_orders_to_tg_bot, send_messag
 class OrderItemCreateSerializer(serializers.Serializer):
     product_id = serializers.UUIDField()
     quantity = serializers.FloatField()
+    object_id = serializers.UUIDField()
 
     def validate(self, data):
         product = Product.objects.filter(id=data['product_id']).first()
         if not product:
             raise serializers.ValidationError("Product not found")
-
+        object = Object.objects.filter(id=data['object_id']).first()
+        if not object:
+            raise serializers.ValidationError("Product not found")
         data['product'] = product
+        data['object'] = object
         product.quantity_left -= round(data['quantity'] / product.min_quantity)
         product.save()
 
@@ -42,11 +46,13 @@ class OrderCreateSerializer(serializers.Serializer):
 
             for item in order_items:
                 product = item.get("product")
+                object = item.get("object")
                 items.append(OrderItem(
                     product=product,
                     price=item.get('price'),
                     quantity=item.get('quantity'),
                     order=order,
+                    object=object,
                 ))
                 total_price += item['price']
 
