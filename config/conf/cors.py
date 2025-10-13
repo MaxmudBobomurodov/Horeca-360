@@ -5,6 +5,8 @@ CSRF_TRUSTED_ORIGINS = [
     'http://91.218.246.233',
     'http://91.218.246.233:8000',
     'http://91.218.246.233:8001',
+    'https://safros.uz',
+    'https://www.safros.uz',
 ]
 
 CORS_ALLOWED_ORIGINS = [
@@ -15,4 +17,6 @@ CORS_ALLOWED_ORIGINS = [
     'https://agro365-admin.vercel.app',
     'http://91.218.246.233:8000',
     'http://91.218.246.233:8001',
+    'https://safros.uz',
+    'https://www.safros.uz',
 ]
