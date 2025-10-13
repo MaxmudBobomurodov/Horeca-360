@@ -1,10 +1,12 @@
 import telebot
+from telebot import types
 from django.conf import settings
 
 BOT_TOKEN = settings.TELEGRAM_BOT_TOKEN
 bot = telebot.TeleBot(BOT_TOKEN)
 
 accepted_orders = {}  # {order_id: telegram_user_id}
+
 
 @bot.callback_query_handler(func=lambda call: True)
 def callback_query(call):
@@ -14,17 +16,17 @@ def callback_query(call):
             return
 
         accepted_orders[call.message.message_id] = call.from_user.id
+
         text = (
             f"✅ Buyurtma olindi @{call.from_user.username} tomonidan.\n"
             f"❌ Bekor qilishni faqat shu foydalanuvchi bosishi mumkin."
         )
-        buttons = {
-            "inline_keyboard": [
-                [
-                    {"text": "❌ Bekor qilish", "callback_data": f"cancel_order"}
-                ]
-            ]
-        }
+
+        # ✅ InlineKeyboardMarkup ishlatamiz
+        buttons = types.InlineKeyboardMarkup()
+        cancel_button = types.InlineKeyboardButton("❌ Bekor qilish", callback_data="cancel_order")
+        buttons.add(cancel_button)
+
         bot.edit_message_text(chat_id=call.message.chat.id,
                               message_id=call.message.message_id,
                               text=text,
@@ -43,5 +45,6 @@ def callback_query(call):
                               message_id=call.message.message_id,
                               text=text)
         bot.answer_callback_query(call.id, "Buyurtma bekor qilindi ❌")
+
 
 bot.infinity_polling()
