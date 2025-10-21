@@ -11,6 +11,7 @@ from core.apps.orders.tasks.order_item import send_orders_to_tg_bot, send_messag
 class OrderItemCreateSerializer(serializers.Serializer):
     product_id = serializers.UUIDField()
     quantity = serializers.FloatField()
+    object_id = serializers.UUIDField(required=False)
 
     def validate(self, data):
         product = Product.objects.filter(id=data['product_id']).first()
@@ -19,18 +20,25 @@ class OrderItemCreateSerializer(serializers.Serializer):
 
         data['product'] = product
 
+        # Object tekshirish
         if data.get('object_id'):
             from core.apps.products.models import Object
             obj = Object.objects.filter(id=data['object_id']).first()
             if not obj:
                 raise serializers.ValidationError("Object not found")
             data['object'] = obj
+        else:
+            data['object'] = None
 
-        product.quantity_left -= round(data['quantity'] / product.min_quantity)
+        remain = round(data['quantity'] / product.min_quantity)
+        if product.quantity_left < remain:
+            raise serializers.ValidationError(f"{product.name} yetarli emas!")
+        product.quantity_left -= remain
         product.save()
 
         data['price'] = round((data['quantity'] / product.min_quantity) * product.price)
         return data
+
 
 
 class OrderCreateSerializer(serializers.Serializer):
@@ -42,8 +50,8 @@ class OrderCreateSerializer(serializers.Serializer):
     def create(self, validated_data):
         with transaction.atomic():
             order_items = validated_data.pop('items')
-            validated_data.pop('object_id', None)  # ❗ olib tashladik
-            validated_data.pop('order_type', None)  # ❗ olib tashladik
+            validated_data.pop('object_id', None)
+            validated_data.pop('order_type', None)
 
             order = Order.objects.create(
                 user=self.context.get('user'),
@@ -66,9 +74,12 @@ class OrderCreateSerializer(serializers.Serializer):
 
                 send_orders_to_tg_bot.delay(
                     chat_id=item.get('product').tg_id,
+                    order_id=order.id,
                     product_name=item.get('product').name,
-                    quantity=item.get('quantity'),
+                    quantity=int(item.get('quantity')) if item.get('quantity').is_integer() else item.get('quantity'),
                     username=order.user.username,
+                    object_name=item.get('object').name if item.get('object') else None,
+                    price=None if item.get('object') else item.get('price'),
                 )
 
             OrderItem.objects.bulk_create(items)
@@ -80,6 +91,7 @@ class OrderCreateSerializer(serializers.Serializer):
                 order_id=order.id,
             )
             return order
+
 
 
 class OrderItemListSerializer(serializers.ModelSerializer):
