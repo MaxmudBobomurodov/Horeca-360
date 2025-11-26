@@ -24,10 +24,10 @@ class ProductSerializer(serializers.ModelSerializer):
             'name', 'image', 'category', 'price', 'description', 'unity', 'tg_id',
             'quantity_left', 'min_quantity'
         ]
-        # extra_kwargs = {
-        #     'image': {'required': False},
-        #     'category': {'required': False},
-        #     'price': {'required': False},
-        #     'tg_id': {'required': False},
-        #     'quantity_left': {'required': False},
-        # }
+        extra_kwargs = {
+            'image': {'required': False},
+            'category': {'required': False},
+            'price': {'required': False},
+            'tg_id': {'required': False},
+            'quantity_left': {'required': False},
+        }
