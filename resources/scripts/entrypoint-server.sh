@@ -19,7 +19,4 @@ python3 manage.py collectstatic --noinput
 
 echo "Starting Gunicorn..."
 exec gunicorn config.wsgi:application \
-    --bind 0.0.0.0:8000 \
-    --workers $(($(nproc) * 2 + 1)) \
-    --timeout 120 \
-    --log-level info
+    --bind 0.0.0.0:8080 \   # <-- bu yerni 8080 g
