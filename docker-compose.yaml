@@ -41,7 +41,7 @@ services:
     volumes:
       - './:/code'
     expose:                # ports ni expose ga o'zgartirdik
-      - 8000
+      - 8080
     depends_on:
       - db
       - redis
