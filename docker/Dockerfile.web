@@ -22,5 +22,6 @@ RUN apt-get update && \
 
 COPY ./ /code
 RUN --mount=type=cache,target=/root/.cache/pip python3 -m pip install -r requirements.txt
+RUN python3 -m pip install gunicorn
 
 CMD ["sh", "./resources/scripts/entrypoint-server.sh"]
