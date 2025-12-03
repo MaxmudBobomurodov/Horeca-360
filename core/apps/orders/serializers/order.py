@@ -87,13 +87,13 @@ class OrderCreateSerializer(serializers.Serializer):
                 # obyekt bo'lsa → object name
                 # obyekt bo'lmasa → price
                 send_orders_to_tg_bot.delay(
-                    chat_id=product.tg_id,
+                    chat_id=item.get('product').tg_id,
                     order_id=order.id,
-                    product_name=product.name,
-                    quantity=quantity,
+                    product_name=item.get('product').name,
+                    quantity=int(item.get('quantity')) if item.get('quantity').is_integer() else item.get('quantity'),
                     username=order.user.username,
-                    object_name=object_instance.name if object_instance else None,
-                    price=price if not object_instance else None,
+                    object_name=item.get('object').name if item.get('object') else None,
+                    price=None if item.get('object') else item.get('price'),
                 )
 
             OrderItem.objects.bulk_create(items)
