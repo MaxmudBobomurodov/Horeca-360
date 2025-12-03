@@ -11,21 +11,19 @@ class OrderCreateApiView(generics.GenericAPIView):
     permission_classes = [permissions.IsAuthenticated]
 
     def post(self, request):
-        serializer = self.serializer_class(data=request.data, context={'user': request.user})
-        if serializer.is_valid(raise_exception=True):
-            serializer.save()
-            return Response(
-                {'success': True, 'message': 'Firdavs aka order create qilindi, tekshirib koring'},
-                status=200
-            )
-        return Response(
-            {
-                'success': False,
-                "message": "Firdavs aka order create qilishda xatolik chiqdi, errorni oqib koring",
-                'error': serializer.errors,
-            },
-            status=400
+        serializer = self.serializer_class(
+            data=request.data,
+            context={'user': request.user}
         )
+
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+
+        return Response(
+            {'success': True, 'message': 'Order muvaffaqiyatli yaratildi'},
+            status=200
+        )
+
     
 
 class OrderListApiView(generics.GenericAPIView):

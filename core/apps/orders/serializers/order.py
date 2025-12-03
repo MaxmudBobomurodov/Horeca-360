@@ -44,7 +44,7 @@ class OrderItemCreateSerializer(serializers.Serializer):
 class OrderCreateSerializer(serializers.Serializer):
     items = OrderItemCreateSerializer(many=True)
     comment = serializers.CharField(required=False)
-    object_id = serializers.UUIDField(required=True)
+    object_id = serializers.UUIDField(required=False)
     order_type = serializers.CharField(required=False)
 
     def create(self, validated_data):
@@ -63,26 +63,41 @@ class OrderCreateSerializer(serializers.Serializer):
 
             for item in order_items:
                 product = item.get("product")
+                quantity = item.get("quantity")
+
+                # Quantity ni to‘g‘rilash (2.0 -> 2)
+                if isinstance(quantity, float) and quantity.is_integer():
+                    quantity = int(quantity)
+
+                price = item.get("price")
+                object_instance = item.get("object")
+
+                # total price = price * quantity
+                total_price += price * quantity
+
                 items.append(OrderItem(
                     product=product,
-                    price=item.get('price'),
-                    quantity=item.get('quantity'),
+                    price=price,
+                    quantity=quantity,
                     order=order,
-                    object=item.get('object'),
+                    object=object_instance,
                 ))
-                total_price += item['price']
 
+                # --- TELEGRAMGA YUBORILADIGAN MA'LUMOT ---
+                # obyekt bo'lsa → object name
+                # obyekt bo'lmasa → price
                 send_orders_to_tg_bot.delay(
-                    chat_id=item.get('product').tg_id,
+                    chat_id=product.tg_id,
                     order_id=order.id,
-                    product_name=item.get('product').name,
-                    quantity=int(item.get('quantity')) if item.get('quantity').is_integer() else item.get('quantity'),
+                    product_name=product.name,
+                    quantity=quantity,
                     username=order.user.username,
-                    object_name=item.get('object').name if item.get('object') else None,
-                    price=None if item.get('object') else item.get('price'),
+                    object_name=object_instance.name if object_instance else None,
+                    price=price if not object_instance else None,
                 )
 
             OrderItem.objects.bulk_create(items)
+
             order.total_price = total_price
             order.save()
 
@@ -90,7 +105,9 @@ class OrderCreateSerializer(serializers.Serializer):
                 chat_id=order.user.tg_id,
                 order_id=order.id,
             )
+
             return order
+
 
 
 
